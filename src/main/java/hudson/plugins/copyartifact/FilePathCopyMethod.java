@@ -42,14 +42,26 @@ public class FilePathCopyMethod extends Copier {
     @Override
     public int copyAll(FilePath srcDir, String filter, FilePath targetDir)
             throws IOException, InterruptedException {
-        return srcDir.copyRecursiveTo(filter, targetDir);
+		try {
+        	return srcDir.copyRecursiveTo(filter, targetDir);
+		} catch (IOException e) {
+			//retry
+			Thread.sleep(1000);
+			return srcDir.copyRecursiveTo(filter, targetDir);
+		}
     }
 
     /** @see FilePath#copyTo(FilePath) */
     @Override
     public void copyOne(FilePath source, FilePath target)
             throws IOException, InterruptedException {
-        source.copyToWithPermission(target);
+		try {
+        	source.copyToWithPermission(target);
+		} catch (IOException e) {
+			//retry
+			Thread.sleep(1000);
+			source.copyToWithPermission(target);
+		}
     }
 
     @Override
